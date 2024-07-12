@@ -1,2 +1,2 @@
-# MusPlay
-Repositorio app MusPlay
+# MusPlay-Ionic
+Repositorio app MusPlay frontend desarrollado en Ionic
