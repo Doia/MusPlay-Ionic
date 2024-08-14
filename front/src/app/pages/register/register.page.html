@@ -1,0 +1,96 @@
+
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start" (click)="goToLogin()">
+      <ion-back-button default-href="#"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Sing In</ion-title> 
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>  
+
+  
+  
+      <ion-grid fixed>
+            <form (ngSubmit)="registro( fRegistro )" #fRegistro="ngForm">
+                <ion-row>
+                    <ion-col>
+                        
+                        <ion-list>
+                            
+                          <ion-item>
+                            <ion-input  label="Username" labelPlacement="floating" placeholder="username"
+                                        name="username"
+                                        type="text"
+                                        [(ngModel)]="registerUser.username"
+                                        required></ion-input>
+                          </ion-item>
+
+                          <ion-item>
+                            <ion-input  label="Email" labelPlacement="floating" placeholder="email@playmus.com"
+                                        name="email" 
+                                        type="email"
+                                        [(ngModel)]="registerUser.email"
+                                        required></ion-input>
+                          </ion-item>
+                          
+                          <ion-item>
+                            <ion-input  label="Password" labelPlacement="floating" placeholder="********"
+                                        type="password"
+                                        name="password"
+                                        [(ngModel)]="registerUser.password"
+                                        required>
+                              <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+                            </ion-input>
+                          </ion-item>
+                          
+                          <ion-item>
+                            <ion-input  label="Phone number" labelPlacement="floating" placeholder="+34 600 000 000"
+                                        name="phone"
+                                        type="tel"
+                                        [(ngModel)]="registerUser.phone"
+                                        required></ion-input>
+                          </ion-item>
+                          
+
+                        </ion-list>
+                    </ion-col>
+                </ion-row>
+                
+                <ion-row>
+                <ion-col>
+                    <ion-button type="submit"
+                                expand="full"
+                                color="tertiary"
+                                shape="round">
+                        Crear usuario
+                    </ion-button>
+                </ion-col>
+            </ion-row>
+            
+            </form>
+        </ion-grid>
+</ion-content>
+
+<ion-footer no-border>
+  <ion-toolbar>
+    
+    <ion-row>
+      <ion-col>
+          <ion-button shape="round"
+                      expand="full"
+                      size="small"
+                      fill="outline"
+                      color="tertiary"
+                      (click)="goToLogin()">
+            Login
+          </ion-button>
+      </ion-col>
+    </ion-row>
+
+
+
+  </ion-toolbar>
+</ion-footer>

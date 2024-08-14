@@ -1,0 +1,25 @@
+<ion-header no-border>
+  <ion-toolbar>
+    <ion-buttons slot="start" (click)="goToFeed()">
+      <ion-back-button default-href="#"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>Notifications</ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list>
+    <ion-item *ngFor="let notification of notifications">
+      <ion-avatar slot="start">
+        <img [src]="notification.profileImage" />
+      </ion-avatar>
+      <ion-label>
+        <h2>{{ notification.user }}</h2>
+        <p>{{ notification.text }}</p>
+        <p>{{ notification.date }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

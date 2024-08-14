@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="centered-title">Comments</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="scrollable-content">
+  <app-comment *ngFor="let comment of post?.comments" [comment]="comment"></app-comment>
+  <!-- Caja de texto para escribir un nuevo comentario -->
+</ion-content>
+
+<ion-footer class="fixed-footer">
+  <ion-toolbar>
+    <ion-item>
+      <ion-input
+        [(ngModel)]="newComment"
+        placeholder="Escribe un comentario..."
+        type="text"
+        clearInput
+      ></ion-input>
+      <ion-button (click)="sendComment()" fill="solid" slot="end">
+        Enviar
+      </ion-button>
+    </ion-item>
+  </ion-toolbar>
+</ion-footer>

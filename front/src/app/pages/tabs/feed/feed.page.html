@@ -1,0 +1,62 @@
+<ion-header no-border>
+  <ion-toolbar>
+
+    <ion-buttons slot="start">
+      <ion-icon slot="icon-only" name="bonfire"></ion-icon>
+    </ion-buttons>
+
+
+    <ion-title>
+      Mas Mus
+    </ion-title>
+
+    <!-- Botón de notificaciones -->
+    <ion-buttons slot="end">
+      <ion-button (click)="goToNotifications()">
+        <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content color="light">
+   
+  <!-- Refresher -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh( $event )">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Posts -->
+  <app-posts [posts]="posts"></app-posts>
+
+  <!-- Infinite Scroll -->
+  <ion-infinite-scroll [disabled]="!habilitado"
+                        threshold="150px"
+                        (ionInfinite)="siguientes($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+      <!-- Floating Action Button -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button size="small" style="--background: rgba(0, 0, 0, 0.7);">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+
+      <ion-fab-button size="small" style="--background: rgba(0, 0, 0, 0.7);" (click)="goToAddPost()">
+        <ion-icon name="create-outline"></ion-icon> 
+      </ion-fab-button>
+      <ion-label style="font-size: 11px;">Add Post</ion-label>
+
+      <ion-fab-button size="small" style="--background: rgba(0, 0, 0, 0.7);" (click)="goToAddMatch()">
+        <ion-icon name="football-outline"></ion-icon> 
+      </ion-fab-button>
+      <ion-label style="font-size: 11px;">Add Match</ion-label>
+     
+    </ion-fab-list>
+  </ion-fab>
+
+</ion-content>
+
+

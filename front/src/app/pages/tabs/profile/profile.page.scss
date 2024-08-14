@@ -1,0 +1,19 @@
+
+ion-header.no-border {
+    --border-width: 0;
+    --box-shadow: none;
+    --border-color: transparent;
+  }
+  
+  ion-toolbar {
+    --border-width: 0; /* Asegúrate de eliminar cualquier borde del toolbar */
+    --box-shadow: none; /* Elimina la sombra del toolbar */
+  }
+
+.img-avatar {
+    width: 150px;
+}
+
+.top-20 {
+    margin-top: 20px;
+}

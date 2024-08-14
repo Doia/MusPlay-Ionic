@@ -1,0 +1,44 @@
+
+ion-header.no-border {
+    --border-width: 0;
+    --box-shadow: none;
+    --border-color: transparent;
+  }
+  
+  ion-toolbar {
+    --border-width: 0; /* Asegúrate de eliminar cualquier borde del toolbar */
+    --box-shadow: none; /* Elimina la sombra del toolbar */
+  }
+
+.img-avatar {
+    width: 150px;
+}
+
+.top-20 {
+    margin-top: 20px;
+}
+
+.custom-item {
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #f9f9f9;
+}
+
+ion-input,
+ion-textarea {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+}
+
+ion-textarea {
+  font-size: 0.75em; /* Tamaño de fuente más pequeño */
+}
+
+ion-note {
+  margin-top: 5px;
+  font-size: 0.8em; /* Tamaño de fuente del contador de caracteres */
+}

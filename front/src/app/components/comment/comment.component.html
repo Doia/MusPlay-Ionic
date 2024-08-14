@@ -1,0 +1,12 @@
+<ion-item>
+  <ion-avatar slot="start">
+    <img [src]="comment?.owner?.imagePath" />
+  </ion-avatar>
+  <ion-label>
+    <h3>
+      {{ comment?.owner?.username }}
+      <span class="comment-date">{{ comment?.date }}</span>
+    </h3>
+    <p>{{ comment?.content }}</p>
+  </ion-label>
+</ion-item>

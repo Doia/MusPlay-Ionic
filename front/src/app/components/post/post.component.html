@@ -1,0 +1,39 @@
+<ion-card>
+    <!-- Usuario y opciones -->
+    <ion-item lines="none">
+      <ion-avatar slot="start">
+        <img [src]="post?.owner?.imagePath" />
+      </ion-avatar>
+      <ion-label>
+        <h2>{{ post?.owner?.username }}</h2>
+        <p>{{ post?.date }}</p>
+      </ion-label>
+      <ion-button fill="clear" slot="end" id="options-button">
+        <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-item>
+  
+    <!-- Texto del Post -->
+    <ion-card-content>
+      <p>{{ post?.content }}</p>
+      <ion-img [src]="post?.imagePath"></ion-img>
+    </ion-card-content>
+  
+    <!-- Botones de interacción -->
+    <ion-item lines="none">
+      <ion-button fill="clear" slot="start" id="like-button">
+        <ion-icon slot="icon-only" name="heart-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" slot="start" id="comment-button">
+        <ion-icon slot="icon-only" name="chatbubble-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+  
+    <!-- Comentarios -->
+    <ion-card-content>
+      <app-comment *ngFor="let comment of post?.comments" [comment]="comment"></app-comment>
+      <ion-button expand="full" fill="outline" (click)="openComments(post)">
+        Ver más comentarios
+      </ion-button>
+    </ion-card-content>
+  </ion-card>

@@ -1,0 +1,29 @@
+ion-header.no-border {
+    --border-width: 0;
+    --box-shadow: none;
+    --border-color: transparent;
+  }
+
+  ion-toolbar {
+    --border-width: 0; /* Asegúrate de eliminar cualquier borde del toolbar */
+    --box-shadow: none; /* Elimina la sombra del toolbar */
+  }
+
+  ion-item {
+    --inner-padding-start: 0;
+    --inner-padding-end: 0;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+  }
+  
+  ion-label h2 {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  ion-label p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--ion-text-color-step-600);
+  }
+  
