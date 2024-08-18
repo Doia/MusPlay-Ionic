@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { NavController } from '@ionic/angular';
 import { User } from 'src/app/models/user';
 import { AccountService } from 'src/app/services/account.service';
+import { ImageService } from 'src/app/services/image.service';
 import { ProfileService } from 'src/app/services/profile.service';
 import { UiServiceService } from 'src/app/services/ui-service.service';
 
@@ -22,6 +23,7 @@ export class EditProfilePage {
                private uiService: UiServiceService,
                private navCtrl: NavController,
                private profileService: ProfileService,
+               private imageService : ImageService,
                //private postsService: PostsService
               ) { }
 
@@ -57,10 +59,25 @@ export class EditProfilePage {
   }
 
   // Función para cambiar la imagen de perfil
-  changeProfilePicture() {
-    // Aquí implementas la lógica para cambiar la imagen de perfil
-    // Por ejemplo, abrir un selector de archivos o tomar una foto
-    console.log('Cambiar imagen de perfil');
+  async changeProfilePicture() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+
+    input.onchange = async () => {
+      const file = input.files?.item(0);
+      if (file) {
+        const success = await this.imageService.uploadImage(file);
+        if (success) {
+          this.temporalUser.imagePath = this.imageService.getImageUrl(file.name);
+          this.uiService.presentToast('Imagen de perfil actualizada');
+        } else {
+          this.uiService.presentToast('Error al subir la imagen');
+        }
+      }
+    };
+
+    input.click();
   }
 
   updateCharacterCount() {
