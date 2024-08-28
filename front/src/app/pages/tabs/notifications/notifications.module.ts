@@ -8,6 +8,7 @@ import { NotificationsPageRoutingModule } from './notifications-routing.module';
 
 import { NotificationsPage } from './notifications.page';
 import { ComponentsModule } from 'src/app/components/components.module';
+import { TimeParser } from 'src/app/utils/TimeParser';
 
 @NgModule({
   imports: [
@@ -17,6 +18,9 @@ import { ComponentsModule } from 'src/app/components/components.module';
     ComponentsModule,
     NotificationsPageRoutingModule
   ],
-  declarations: [NotificationsPage]
+  declarations: [NotificationsPage],
+  providers: [
+    TimeParser  // Aquí registramos TimeParser como proveedor
+  ]
 })
 export class NotificationsPageModule {}

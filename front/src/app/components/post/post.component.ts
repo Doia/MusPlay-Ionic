@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Post } from 'src/app/models/post';
+import { Post, transformarPost } from 'src/app/models/post';
 
 @Component({
   selector: 'app-post',
@@ -8,7 +8,7 @@ import { Post } from 'src/app/models/post';
 })
 export class PostComponent implements OnInit {
 
-  @Input() post: Post = {};
+  @Input() post: Post = transformarPost({});
   @Output() openCommentsModal = new EventEmitter<Post>();
 
   slideSoloOpts = {
@@ -19,6 +19,10 @@ export class PostComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    // Asegúrate de que el post cumple con la interfaz Post antes de utilizarlo
+    if (this.post) {
+      this.post = transformarPost(this.post);
+    }
   }
 
   openComments(post: Post) {

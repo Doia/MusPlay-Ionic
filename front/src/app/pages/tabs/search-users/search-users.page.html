@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start" (click)="goBack()">
+      <ion-back-button default-href="#"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Search</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar
+    [(ngModel)]="searchQuery"
+    (ionInput)="onSearchChange($event)"
+    placeholder="Search for users"
+  ></ion-searchbar>
+
+  <ion-list>
+    <ion-item *ngFor="let user of filteredUsers">
+      <ion-avatar slot="start">
+        <img [src]="user.avatar" />
+      </ion-avatar>
+      <ion-label>
+        <h2>{{ user.name }}</h2>
+        <p>{{ user.username }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

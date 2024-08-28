@@ -14,51 +14,48 @@ import { UiServiceService } from 'src/app/services/ui-service.service';
 })
 export class EditProfilePage {
 
-  user: User = {};
-  temporalUser: User = {};
+  user: User | null = {id: '',username: ''};;
+  temporalUser: User = {id: '',username: ''};
   remainingChars = 150;
   showCharCount = false;
+  profileImageUrl: string | null = null; // Agrega esta propiedad para cachear la URL de la imagen
 
-  constructor( private accountService: AccountService,
-               private uiService: UiServiceService,
-               private navCtrl: NavController,
-               private profileService: ProfileService,
-               private imageService : ImageService,
-               //private postsService: PostsService
-              ) { }
+  constructor(
+    private accountService: AccountService,
+    private uiService: UiServiceService,
+    private navCtrl: NavController,
+    private profileService: ProfileService,
+    private imageService: ImageService
+  ) { }
 
   ionViewWillEnter() {
-    var username = '';
-    if (this.accountService.userValue != null){
-      username = this.accountService.userValue?.username ?? '';
-    }
+    const username = this.accountService.userValue?.username ?? '';
+    this.profileImageUrl = null;
     this.loadUserProfile(username);
   }
 
   private async loadUserProfile(username: string) {
     this.user = await this.profileService.getUserProfile(username) ?? {};
-
-    //Realiza una clonación profunda del objeto usando JSON
     this.temporalUser = JSON.parse(JSON.stringify(this.user)) ?? {};
-  }
 
-  async actualizar( fActualizar: NgForm ) {
-
-    if ( fActualizar.invalid ) { return; }
-
-    const actualizado = await this.accountService.updateUser( this.temporalUser );
-    if ( actualizado ) {
-      // toast con el mensaje de actualizado
-      this.profileService.setUserProfile(this.temporalUser);
-      this.uiService.presentToast( 'Registro actualizado' );
-    } else {
-      // toast con el error
-      this.uiService.presentToast( 'No se pudo actualizar' );
+    // Solo llama a la función para obtener la imagen si no está en caché
+    if (!this.profileImageUrl) {
+      this.profileImageUrl = await this.imageService.getProfileImageUrl(this.user.imagePath);
     }
-
   }
 
-  // Función para cambiar la imagen de perfil
+  async actualizar(fActualizar: NgForm) {
+    if (fActualizar.invalid) { return; }
+
+    const actualizado = await this.accountService.updateUser(this.temporalUser);
+    if (actualizado) {
+      this.profileService.setUserProfile(this.temporalUser);
+      this.uiService.presentToast('Registro actualizado');
+    } else {
+      this.uiService.presentToast('No se pudo actualizar');
+    }
+  }
+
   async changeProfilePicture() {
     const input = document.createElement('input');
     input.type = 'file';
@@ -67,9 +64,10 @@ export class EditProfilePage {
     input.onchange = async () => {
       const file = input.files?.item(0);
       if (file) {
-        const success = await this.imageService.uploadImage(file);
-        if (success) {
-          this.temporalUser.imagePath = this.imageService.getImageUrl(file.name);
+        const newProfileImagePath = await this.imageService.uploadImage(file);
+        if (newProfileImagePath != '') {
+          this.temporalUser.imagePath = newProfileImagePath;
+          this.profileImageUrl = await this.imageService.getProfileImageUrl(this.temporalUser.imagePath); // Actualiza la URL caché
           this.uiService.presentToast('Imagen de perfil actualizada');
         } else {
           this.uiService.presentToast('Error al subir la imagen');
@@ -80,24 +78,27 @@ export class EditProfilePage {
     input.click();
   }
 
+  getProfileImageUrl() {
+    return this.profileImageUrl || 'assets/avatars/av-2.png'; // Usa la URL caché o un avatar por defecto
+  }
+
   updateCharacterCount() {
-    const descriptionLength = this.user.description?.length || 0;
+    const descriptionLength = this.temporalUser.description?.length || 0;
     this.remainingChars = 150 - descriptionLength;
     this.showCharCount = this.remainingChars <= 50;
   }
 
   logout() {
-    //this.postsService.paginaPosts = 0;
     this.accountService.logout();
   }
 
-  goToProfile(){
-    var username = this.accountService.getUsernameFromToken();
-    if (username !== undefined) {
+  goToProfile() {
+    const username = this.accountService.getUsernameFromToken();
+    if (username) {
       this.navCtrl.navigateBack(`/tabs/profile/${username}`);
     } else {
       console.error('User ID is undefined, cannot navigate to profile');
     }
   }
-
 }
+

@@ -19,7 +19,7 @@
   <!-- Imagen de perfil -->
   <ion-row class="ion-justify-content-center ion-padding">
     <ion-avatar>
-      <img [src]="temporalUser.imagePath || 'assets/avatars/av-2.png'" (click)="changeProfilePicture()" alt="Profile Picture">
+      <img [src]="getProfileImageUrl()" (click)="changeProfilePicture()" alt="Profile Picture">
     </ion-avatar>
   </ion-row>
 

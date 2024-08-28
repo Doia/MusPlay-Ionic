@@ -41,7 +41,7 @@ export class FeedPage {
   }
 
   goToAddPost() {
-    // Lógica para navegar a la página de añadir post
+    this.navCtrl.navigateForward(['/tabs/create-post']);
   }
 
   goToAddMatch() {
@@ -50,6 +50,11 @@ export class FeedPage {
 
   goToNotifications() {
     this.navCtrl.navigateForward(`/tabs/notifications`);
+  }
+
+  // Método para navegar a la página de búsqueda
+  goToSearchPage() {
+    this.navCtrl.navigateForward(`/tabs/search-users`)
   }
 
 }

@@ -3,9 +3,7 @@
     <ion-buttons slot="start" (click)="goToFeed()">
       <ion-back-button default-href="#"></ion-back-button>
     </ion-buttons>
-
     <ion-title>Notifications</ion-title>
-
   </ion-toolbar>
 </ion-header>
 
@@ -13,12 +11,12 @@
   <ion-list>
     <ion-item *ngFor="let notification of notifications">
       <ion-avatar slot="start">
-        <img [src]="notification.profileImage" />
+        <img [src]="getProfileImage(notification.sender?.id || '')" />
       </ion-avatar>
       <ion-label>
-        <h2>{{ notification.user }}</h2>
-        <p>{{ notification.text }}</p>
-        <p>{{ notification.date }}</p>
+        <h2>{{ notification.sender?.username }}</h2>
+        <p>{{ notification.message }}</p>
+        <p>{{ parseTime(notification.createdAt) }}</p>
       </ion-label>
     </ion-item>
   </ion-list>

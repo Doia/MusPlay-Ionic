@@ -9,7 +9,7 @@ import { User } from '../models/user';
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
 
-    private profileUser: User  = {};
+    private profileUser: User  = { id: '',username: '' };
 
     constructor(
         private accountService: AccountService
@@ -17,7 +17,7 @@ export class ProfileService {
 
     public async getUserProfile(username: string){
         if (username != this.profileUser.username){
-            this.profileUser = await this.accountService.getUserByUsername(username) ?? {};
+            this.profileUser = await this.accountService.getUserByUsername(username) ?? { id: '',username: '' };
             console.log(this.profileUser);
         }
         return this.profileUser;
@@ -28,6 +28,6 @@ export class ProfileService {
     }
 
     public clearService(){
-        this.profileUser = {};
+        this.profileUser = { id: '',username: '' };
     }
 }

@@ -5,13 +5,18 @@
       <ion-icon slot="icon-only" name="bonfire"></ion-icon>
     </ion-buttons>
 
-
     <ion-title>
       Mas Mus
     </ion-title>
 
-    <!-- Botón de notificaciones -->
+    <!-- Botones de búsqueda y notificaciones -->
     <ion-buttons slot="end">
+      <!-- Botón de búsqueda -->
+      <ion-button (click)="goToSearchPage()">
+        <ion-icon slot="icon-only" name="search-outline"></ion-icon>
+      </ion-button>
+
+      <!-- Botón de notificaciones -->
       <ion-button (click)="goToNotifications()">
         <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
       </ion-button>
@@ -23,7 +28,7 @@
 <ion-content color="light">
    
   <!-- Refresher -->
-  <ion-refresher slot="fixed" (ionRefresh)="doRefresh( $event )">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
@@ -37,7 +42,7 @@
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>
 
-      <!-- Floating Action Button -->
+  <!-- Floating Action Button -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button size="small" style="--background: rgba(0, 0, 0, 0.7);">
       <ion-icon name="add"></ion-icon>
@@ -58,5 +63,3 @@
   </ion-fab>
 
 </ion-content>
-
-

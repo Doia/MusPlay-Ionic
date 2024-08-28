@@ -35,6 +35,14 @@ const routes: Routes = [
         loadChildren: () => import('./notifications/notifications.module').then( m => m.NotificationsPageModule)
       },
       {
+        path: 'create-post',
+        loadChildren: () => import('./create-post/create-post.module').then(m => m.CreatePostPageModule)
+      },
+      {
+        path: 'search-users',
+        loadChildren: () => import('./search-users/search-users.module').then(m => m.SearchUsersPageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/home',
         pathMatch: 'full'

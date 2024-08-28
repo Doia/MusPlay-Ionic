@@ -35,14 +35,31 @@ export class AccountService {
         return this.userSubject.value;
     }
 
+    async obtainUserLogged() {
+        const user = localStorage.getItem('user');
+        if (!user) {
+          return undefined;
+        }
+        const username = JSON.parse(user).username;
+        return this.getUserByUsername(username);
+    }
+
     async login(username: string, password: string): Promise<boolean> {
         try {
-            const data: User = await lastValueFrom(this.http.post(environment.apiUrl + '/login', { username, password }));
+            const data: any = await lastValueFrom(this.http.post(environment.apiUrl + '/login', { username, password }));
             
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem('user', JSON.stringify({ username: data.username, token: data.token, role: data.roles}));
-            this.userSubject.next(data);
-            this.isLoggedIn = true;
+
+            const userLogged: any | undefined = await this.obtainUserLogged();
+
+            if (userLogged) {
+                this.userSubject.next(userLogged);
+                this.isLoggedIn = true;
+              } else {
+                localStorage.removeItem('user');
+                this.isLoggedIn = false;
+              }
         } catch (error) {
             this.isLoggedIn = false;
             console.error('Error occurred:', error);
@@ -63,7 +80,7 @@ export class AccountService {
         var isRegister: boolean = false;
 
         try {
-            const data = await lastValueFrom(this.http.post(`${environment.apiUrl}/register`, user));
+            const data = await lastValueFrom(this.http.post(`${environment.apiUrl}/users/register`, user));
             isRegister = true;
         } catch (error) {
             isRegister = false;

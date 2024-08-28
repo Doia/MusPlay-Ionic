@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Post } from 'src/app/models/post';
+import { Post, transformarPost } from 'src/app/models/post';
 
 @Component({
   selector: 'app-comments-modal',
@@ -9,10 +9,15 @@ import { Post } from 'src/app/models/post';
 })
 export class CommentsModalComponent {
   
-  @Input() post: Post = {};
+  @Input() post: Post = transformarPost({});
   newComment: string = '';
 
-  constructor(private modalController: ModalController) {}
+  constructor(private modalController: ModalController) {
+      // Asegúrate de que el post cumple con la interfaz Post antes de utilizarlo
+      if (this.post) {
+        this.post = transformarPost(this.post);
+      }
+  }
 
   // Método opcional si quieres cerrar el modal manualmente
   dismissModal() {

@@ -36,7 +36,7 @@ export class LoginPage implements OnInit {
     const valido = await this.accountService.login( this.loginUser.username, this.loginUser.password );
 
     if ( valido ) {
-      // navegar al tabs
+
       this.navCtrl.navigateRoot( '/tabs', { animated: true } );
     } else {
       // mostrar alerta de usuario y contraseña no correctos

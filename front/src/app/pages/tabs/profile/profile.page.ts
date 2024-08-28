@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { User } from 'src/app/models/user';
 import { AccountService } from 'src/app/services/account.service';
+import { ImageService } from 'src/app/services/image.service';
 import { ProfileService } from 'src/app/services/profile.service';
 import { UiServiceService } from 'src/app/services/ui-service.service';
 
@@ -14,7 +15,7 @@ import { UiServiceService } from 'src/app/services/ui-service.service';
 })
 export class ProfilePage {
 
-  user: User = {};
+  user: User = {id: '',username: '' };
 
   images: string[] = [
     'https://via.placeholder.com/150',
@@ -30,6 +31,7 @@ export class ProfilePage {
                private uiService: UiServiceService,
                private navCtrl: NavController,
                private route: ActivatedRoute,
+               private imageService : ImageService
               ) {}
 
   ionViewWillEnter() {
@@ -65,6 +67,10 @@ export class ProfilePage {
 
   goToEditProfile(){
     this.navCtrl.navigateRoot( '/tabs/editProfile', { animated: true } );
+  }
+
+  getProfileImageUrl(){
+    return this.imageService.getProfileImageUrl(this.user.imagePath);
   }
 
 }

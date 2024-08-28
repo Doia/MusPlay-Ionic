@@ -1,5 +1,5 @@
 import { NgModule, Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
-import { Post } from 'src/app/models/post';
+import { Post, transformarPost } from 'src/app/models/post';
 import { CommentsModalComponent } from '../comments-modal/comments-modal.component';
 import { ModalController } from '@ionic/angular';
 
@@ -11,11 +11,15 @@ import { ModalController } from '@ionic/angular';
 export class PostsComponent implements OnInit {
 
   @Input() posts: Post[] = [];
-  selectedPost: Post = {};
+  selectedPost: Post = transformarPost({});
 
   constructor(private modalController: ModalController) { }
 
   ngOnInit() {
+    // Asegúrate de que el post cumple con la interfaz Post antes de utilizarlo
+    if (this.selectedPost) {
+      this.selectedPost = transformarPost(this.selectedPost);
+    }
     console.log(this.posts);
   }
 
@@ -32,7 +36,7 @@ export class PostsComponent implements OnInit {
   
     modal.onDidDismiss().then(() => {
       console.log('Modal dismissed');
-      this.selectedPost = {};
+      this.selectedPost = transformarPost({});
     });
   
     return modal.present();
