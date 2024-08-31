@@ -5,11 +5,6 @@ export interface Role {
     name: string;
 }
 
-// export class Role {
-//     id?: number;
-//     name?: string;
-// }
-
 export function transformarRole(data: any): Role {
     return {
         id: data.id,

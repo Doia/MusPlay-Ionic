@@ -14,7 +14,7 @@ import { ImageService } from 'src/app/services/image.service';
 export class NotificationsPage {
 
   notifications: NotificationModel[] = [];
-  profileImages: { [userId: string]: string } = {}; // Diccionario para almacenar las URLs de las imágenes de perfil
+  profileImages: { [userId: number]: string } = {}; // Diccionario para almacenar las URLs de las imágenes de perfil
 
   constructor(
     private navCtrl: NavController,
@@ -56,7 +56,7 @@ export class NotificationsPage {
   }
 
   // Método para obtener la URL de la imagen de perfil en el template
-  getProfileImage(userId: string): string {
+  getProfileImage(userId: number): string {
     return this.profileImages[userId] || 'assets/avatars/default-avatar.png'; // Usar un avatar por defecto si no hay imagen
   }
 }

@@ -1,143 +1,126 @@
 ﻿import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { lastValueFrom, BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { lastValueFrom, BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { User } from '../models/user';
-import {jwtDecode} from 'jwt-decode';
-import { ProfileService } from './profile.service';
-
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
     private userSubject: BehaviorSubject<User | null>;
     public user: Observable<User | null>;
-    public isLoggedIn: boolean
-
-
+    public isLoggedIn: boolean;
 
     constructor(
         private router: Router,
-        private http: HttpClient,
+        private http: HttpClient
     ) {
-        this.userSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('user')!));
+        const storedUser = localStorage.getItem('user');
+        this.userSubject = new BehaviorSubject(storedUser ? JSON.parse(storedUser) : null);
         this.user = this.userSubject.asObservable();
-        if (this.userSubject.value){
-            this.isLoggedIn = true;
-        }
-        else{
-            this.isLoggedIn = false;
-        }
+        this.isLoggedIn = !!this.userSubject.value;
     }
 
-    public get userValue() {
+    public get userValue(): User | null {
         return this.userSubject.value;
-    }
-
-    async obtainUserLogged() {
-        const user = localStorage.getItem('user');
-        if (!user) {
-          return undefined;
-        }
-        const username = JSON.parse(user).username;
-        return this.getUserByUsername(username);
     }
 
     async login(username: string, password: string): Promise<boolean> {
         try {
-            const data: any = await lastValueFrom(this.http.post(environment.apiUrl + '/login', { username, password }));
-            
-            // store user details and jwt token in local storage to keep user logged in between page refreshes
-            localStorage.setItem('user', JSON.stringify({ username: data.username, token: data.token, role: data.roles}));
+            const data: any = await lastValueFrom(this.http.post(`${environment.apiUrl}/login`, { username, password }));
 
-            const userLogged: any | undefined = await this.obtainUserLogged();
+            // Guarda el token
+            localStorage.setItem('token', data.token);
+
+            // Obtener todos los datos del usuario con el token recibido
+            const userLogged: User | undefined = await this.getUserByUsername(username);
 
             if (userLogged) {
+
+                // Guardar usuario con todos los datos y token en localStorage
+                localStorage.setItem('user', JSON.stringify(userLogged));
+
+                // Actualizar el BehaviorSubject con los datos del usuario
                 this.userSubject.next(userLogged);
                 this.isLoggedIn = true;
-              } else {
+            } else {
                 localStorage.removeItem('user');
                 this.isLoggedIn = false;
-              }
+            }
         } catch (error) {
             this.isLoggedIn = false;
-            console.error('Error occurred:', error);
+            console.error('Error occurred during login:', error);
         }
         return this.isLoggedIn;
     }
 
-    logout() {
-        // remove user from local storage and set current user to null
+    logout(): void {
         localStorage.removeItem('user');
+        localStorage.removeItem('token');
         this.userSubject.next(null);
         this.isLoggedIn = false;
         this.router.navigate(['/login']);
     }
 
-    async register(user: User) {
-
-        var isRegister: boolean = false;
-
+    async register(user: User): Promise<boolean> {
         try {
-            const data = await lastValueFrom(this.http.post(`${environment.apiUrl}/users/register`, user));
-            isRegister = true;
+            await lastValueFrom(this.http.post(`${environment.apiUrl}/users/register`, user));
+            return true;
         } catch (error) {
-            isRegister = false;
-            console.error('Error occurred:', error);
+            console.error('Error occurred during registration:', error);
+            return false;
         }
-        return isRegister;
     }
 
-    getAll() {
+    getAll(): Observable<User[]> {
         return this.http.get<User[]>(`${environment.apiUrl}/users`);
     }
 
     async getUserById(id: string): Promise<User | undefined> {
         try {
-          // Convierte el Observable a Promise usando firstValueFrom
-          const user = await firstValueFrom(this.http.get<User>(`${environment.apiUrl}/users/id/${id}`));
-          return user;
+            return await firstValueFrom(this.http.get<User>(`${environment.apiUrl}/users/id/${id}`));
         } catch (error) {
-          // Maneja el error (puedes mostrar un mensaje al usuario, etc.)
-          console.error('Error fetching user by id:', error);
-          return undefined; // Puedes manejar el error de otra manera según el caso
+            console.error('Error fetching user by id:', error);
+            return undefined;
         }
     }
 
     async getUserByUsername(username: string): Promise<User | undefined> {
         try {
-          // Convierte el Observable a Promise usando firstValueFrom
-          const user = await firstValueFrom(this.http.get<User>(`${environment.apiUrl}/users/username/${username}`));
-          return user;
+            return await firstValueFrom(this.http.get<User>(`${environment.apiUrl}/users/username/${username}`));
         } catch (error) {
-          // Maneja el error (puedes mostrar un mensaje al usuario, etc.)
-          console.error('Error fetching user by id:', error);
-          return undefined; // Puedes manejar el error de otra manera según el caso
+            console.error('Error fetching user by username:', error);
+            return undefined;
         }
     }
 
-    update(id: string, params: any) {
+    async searchUsersByText(text: string): Promise<any> {
+        try {
+            const data = await firstValueFrom(this.http.get<any>(`${environment.apiUrl}/users/search/${text}`));
+            return data.data;
+        } catch (error) {
+            console.error('Error searching users by text:', error);
+            return [];
+        }
+    }
+
+    update(id: number, params: any): Observable<any> {
         return this.http.put(`${environment.apiUrl}/users/id/${id}`, params)
             .pipe(map(x => {
-                // update stored user if the logged in user updated their own record
-                if (id == this.userValue?.id) {
-                    // update local storage
+                if (id === this.userValue?.id) {
                     const user = { ...this.userValue, ...params };
                     localStorage.setItem('user', JSON.stringify(user));
-
-                    // publish updated user to subscribers
                     this.userSubject.next(user);
                 }
                 return x;
             }));
     }
 
-    delete(id: string) {
+    delete(id: number): Observable<any> {
         return this.http.delete(`${environment.apiUrl}/users/${id}`)
             .pipe(map(x => {
-                // auto logout if the logged in user deleted their own record
-                if (id == this.userValue?.id) {
+                if (id === this.userValue?.id) {
                     this.logout();
                 }
                 return x;
@@ -148,13 +131,12 @@ export class AccountService {
         return true;
     }
 
-    // Método para obtener el ID del usuario desde el token
     public getUsernameFromToken(): string | null {
         const user = this.userValue;
         if (user && user.token) {
             try {
                 const decoded: any = jwtDecode(user.token);
-                return decoded?.username || null; // Ajusta el nombre de la propiedad según tu token
+                return decoded?.username || null;
             } catch (error) {
                 console.error('Error decoding token:', error);
                 return null;
@@ -162,6 +144,4 @@ export class AccountService {
         }
         return null;
     }
-
-
 }

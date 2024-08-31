@@ -16,7 +16,7 @@
     <ion-row class="ion-align-items-center ion-padding">
       <ion-col size="4">
         <ion-avatar style="width: 100%; height: 100%; object-fit: cover;">
-          <img src="getProfileImageUrl()" alt="profile" />
+          <img [src]="getProfileImageUrl()" alt="profile" />
         </ion-avatar>
       </ion-col>
 
@@ -46,7 +46,7 @@
 
     <!-- Espacio para texto y label -->
     <ion-label position="stacked" style="display: flex; flex-direction: column; align-items: left; font-size: 14px;" >
-      <strong>{{ user.firstName }}  {{ user.lastName }}</strong>
+      <strong>{{ user.name }}  {{ user.lastName }}</strong>
     </ion-label>
     <ion-label position="stacked" style="display: flex; flex-direction: column; align-items: left; font-size: 12px;" >{{ user.description }}</ion-label>
 

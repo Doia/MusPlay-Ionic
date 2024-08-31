@@ -15,13 +15,7 @@ export class RegisterPage implements OnInit {
 
   passwordVisible = false;
 
-  registerUser: User = {
-    id: '',
-    email: '',
-    password: '',
-    username: '',
-    phone: '',
-  };
+  registerUser: User = new User({});
 
 
   constructor( private accountService: AccountService,

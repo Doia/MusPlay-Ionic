@@ -25,5 +25,18 @@
         ]
       }
     }
+  ],
+  "dataGroups": [
+    {
+      "name": "profile-pictures",
+      "urls": [
+        "http://localhost:8080/profile-images/**"
+      ],
+      "cacheConfig": {
+        "maxSize": 100,
+        "maxAge": "24h",
+        "strategy": "freshness"
+      }
+    }
   ]
 }

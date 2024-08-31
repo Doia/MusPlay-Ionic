@@ -9,13 +9,20 @@ import { AccountService } from 'src/app/services/account.service';
 })
 export class TabsPage {
 
-  username!: string | null;
+  username!: string;
 
   constructor(private accountService: AccountService, private navCtrl: NavController) {}
 
   ngOnInit() {
-    this.username = this.accountService.getUsernameFromToken(); // Obtén el ID del usuario desde el token
-    console.log('User ID from token:', this.username);
+    // this.username = this.accountService.getUsernameFromToken(); // Obtén el ID del usuario desde el token
+    const username = this.accountService.userValue?.username;
+    if (username == undefined){
+      console.error('User USERNAME is undefined, cannot navigate to profile');
+    }
+    else{
+      this.username = username;
+    }
+    console.log('User USERNAME from token:', this.username);
   }
 
   // Métodos de navegación
@@ -28,7 +35,13 @@ export class TabsPage {
   }
 
   navigateToProfile() {
-    this.username = this.accountService.getUsernameFromToken();
+    const username = this.accountService.userValue?.username;
+    if (username == undefined){
+      console.error('User USERNAME is undefined, cannot navigate to profile');
+    }
+    else{
+      this.username = username;
+    }
     if (this.username !== undefined) {
       this.navCtrl.navigateForward(`/tabs/profile/${this.username}`);
     } else {

@@ -15,9 +15,9 @@
   ></ion-searchbar>
 
   <ion-list>
-    <ion-item *ngFor="let user of filteredUsers">
+    <ion-item *ngFor="let user of filteredUsers" (click)="goToUserProfile(user.username)">
       <ion-avatar slot="start">
-        <img [src]="user.avatar" />
+        <img [src]="user.imageUrl" />
       </ion-avatar>
       <ion-label>
         <h2>{{ user.name }}</h2>

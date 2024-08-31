@@ -6,6 +6,7 @@ import { FeedPage } from './feed.page';
 import { ComponentsModule } from '../../../components/components.module';
 
 import { FeedPageRoutingModule } from './feed-routing.module';
+import { TimeParser } from 'src/app/utils/TimeParser';
 
 @NgModule({
   imports: [
@@ -15,6 +16,9 @@ import { FeedPageRoutingModule } from './feed-routing.module';
     ComponentsModule,
     FeedPageRoutingModule
   ],
-  declarations: [FeedPage]
+  declarations: [FeedPage],
+  providers: [
+    TimeParser  // Aquí registramos TimeParser como proveedor
+  ]
 })
 export class FeedPageModule {}

@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { PostsService } from '../../../services/posts.service';
 import { Router } from '@angular/router';
 import { Camera, CameraResultType, CameraSource, ImageOptions } from '@capacitor/camera';
-import { Geolocation } from '@capacitor/geolocation';
+import { Post } from 'src/app/models/post';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-create-post',
@@ -14,47 +15,43 @@ export class CreatePostPage {
   tempImages: string[] = [];
   cargandoGeo = false;
 
-  post = {
-    mensaje: '',
-    coords: '',
-    posicion: false
+  post: { text: string } = {
+    text: ''
   };
 
   constructor(private postsService: PostsService,
               private route: Router) { }
 
-  async crearPost() {
-    console.log(this.post);
-    const creado = await this.postsService.crearPost(this.post);
+  ionViewWillEnter() {
+    this.tempImages  = [];
+    this.cargandoGeo = false;
 
-    this.post = {
-      mensaje: '',
-      coords: '',
-      posicion: false
+    this.post  = {
+      text: ''
     };
-
-    this.tempImages = [];
-
-    this.route.navigateByUrl('/main/tabs/tab1');
   }
 
-  async getGeo() {
-    if (!this.post.posicion) {
-      this.post.coords = '';
-      return;
-    }
-
-    this.cargandoGeo = true;
-
+  async crearPost() {
     try {
-      const position = await Geolocation.getCurrentPosition();
-      const coords = `${position.coords.latitude},${position.coords.longitude}`;
-      console.log(coords);
-      this.post.coords = coords;
+      // Convertir las URLs de las imágenes en Blobs
+      const imageBlobs = await Promise.all(
+        this.tempImages.map(async (image) => {
+          const response = await fetch(image);
+          return response.blob();
+        })
+      );
+
+      // Enviar el post junto con las imágenes al servicio
+      const creado = await this.postsService.crearPost({ text: this.post.text }, imageBlobs);
+
+      // Limpiar el formulario después de crear el post
+      this.post.text = '';
+      this.tempImages = [];
+
+      // Redirigir a la página de feed
+      this.route.navigateByUrl('/tabs/feed');
     } catch (error) {
-      console.log('Error getting location', error);
-    } finally {
-      this.cargandoGeo = false;
+      console.error('Error al crear el post:', error);
     }
   }
 
@@ -85,8 +82,7 @@ export class CreatePostPage {
       const image = await Camera.getPhoto(options);
       const imageUrl = image.webPath || '';
 
-      // Para manejar la imagen, puedes usar la URL de la web (webPath) directamente.
-      this.postsService.subirImagen(imageUrl);
+      // Agregar la URL de la imagen temporalmente
       this.tempImages.push(imageUrl);
     } catch (err) {
       console.error('Error taking picture', err);

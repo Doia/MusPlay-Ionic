@@ -9,7 +9,7 @@ import { AccountService } from './account.service';
 @Injectable({ providedIn: 'root' })
 export class ImageService {
 
-
+    private defaultAvatar = 'assets/avatars/av-2.png';
 
     constructor(
         private http: HttpClient,
@@ -34,18 +34,42 @@ export class ImageService {
     }
 
     async getProfileImageUrl(imagePath: string | undefined): Promise<string> {
-    if (!imagePath) {
-        return 'assets/avatars/av-2.png'; // Avatar por defecto
+
+        if (!imagePath || imagePath == '') {
+            return this.defaultAvatar; // Avatar por defecto
+        }
+    
+        try {
+            const response = await firstValueFrom(this.http.get(`${environment.apiUrl}${environment.profileImages}/${imagePath}`, { responseType: 'blob' }));
+            // Crear un URL de objeto para el blob
+            const blobUrl = URL.createObjectURL(response);
+            // Opcional: Manejar la revocación del URL en el componente
+            return blobUrl;
+        } catch (error) {
+            console.error('Error fetching image:', error);
+            return this.defaultAvatar; // Avatar por defecto en caso de error
+        }
+
     }
 
-    try {
-        const response = await firstValueFrom(this.http.get(`${environment.apiUrl}${environment.profileImages}/${imagePath}`, { responseType: 'blob' }));
-        return URL.createObjectURL(response);
-    } catch (error) {
-        console.error('Error fetching image:', error);
-        return 'assets/avatars/av-2.png'; // Avatar por defecto en caso de error
+    async getPostImageUrl(imagePath: string | undefined): Promise<string> {
+
+        if (!imagePath || imagePath == '') {
+            return ''; // Avatar por defecto
+        }
+    
+        try {
+            const response = await firstValueFrom(this.http.get(`${environment.apiUrl}${environment.postImages}/${imagePath}`, { responseType: 'blob' }));
+            // Crear un URL de objeto para el blob
+            const blobUrl = URL.createObjectURL(response);
+            // Opcional: Manejar la revocación del URL en el componente
+            return blobUrl;
+        } catch (error) {
+            console.error('Error fetching image:', error);
+            return ''; // Avatar por defecto en caso de error
+        }
+
     }
-}
 
 
 

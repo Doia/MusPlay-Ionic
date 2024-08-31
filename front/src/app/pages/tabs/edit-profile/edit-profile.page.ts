@@ -14,8 +14,8 @@ import { UiServiceService } from 'src/app/services/ui-service.service';
 })
 export class EditProfilePage {
 
-  user: User | null = {id: '',username: ''};;
-  temporalUser: User = {id: '',username: ''};
+  user: User = new User({});
+  temporalUser: User = new User({});
   remainingChars = 150;
   showCharCount = false;
   profileImageUrl: string | null = null; // Agrega esta propiedad para cachear la URL de la imagen
