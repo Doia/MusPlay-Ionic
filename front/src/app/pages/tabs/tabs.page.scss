@@ -1,1 +1,10 @@
 
+ion-tab-button {
+    color: var(--ion-color-medium); /* Color para los botones no seleccionados */
+    transition: color 0.3s ease;
+  }
+  
+  ion-tab-button.selected {
+    color: var(--ion-color-dark); /* Color más oscuro para el botón seleccionado */
+  }
+  

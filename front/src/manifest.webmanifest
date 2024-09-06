@@ -1,4 +1,11 @@
 {
+  "name": "Mas Mus App",
+  "short_name": "Mas Mus",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3880ff",
+
   "icons": [
     {
       "src": "assets/icons/icon-48.webp",

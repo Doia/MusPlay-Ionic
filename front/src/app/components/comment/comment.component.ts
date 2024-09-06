@@ -11,9 +11,9 @@ export class CommentComponent {
   @Input() comment: AppComment = transformarAppComment({});
 
   constructor(private timeParser: TimeParser) {
-    if (this.comment) {
-      this.comment = transformarAppComment(this.comment);
-    }
+    // if (this.comment) {
+    //   this.comment = transformarAppComment(this.comment);
+    // }
    }
 
   parseTime(createdAt: Date | undefined): string {

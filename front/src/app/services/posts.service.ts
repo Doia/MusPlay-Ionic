@@ -5,6 +5,7 @@ import { firstValueFrom, Observable, of } from 'rxjs';
 import { User } from '../models/user';
 import { Post, transformarPost } from '../models/post';
 import { environment } from 'src/environments/environment';
+import { AppComment, transformarAppComment } from '../models/comment';
 
 @Injectable({ providedIn: 'root' })
 export class PostsService {
@@ -71,15 +72,54 @@ export class PostsService {
         }
     }
 
+        /**
+     * Obtiene los posts desde el servidor.
+     * @param pull - Booleano para indicar si se debe hacer una nueva carga.
+     * @returns Promise de la lista de posts.
+     */
+    async getPostsByUserId(userId: number, page: number = 0): Promise<Post[]> {
+        try {
+            const response: any = await firstValueFrom(this.http.get<any>(`${environment.apiUrl}/posts/userId/${userId}`, {
+                params: {
+                    page: page.toString(),
+                }
+            }));
+            return response.posts.map(transformarPost); // Transformar cada post recibido
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+            throw error; // Lanza el error para manejarlo en el componente
+        }
+    }
+
     /**
      * Obtiene los posts desde el servidor.
      * @param pull - Booleano para indicar si se debe hacer una nueva carga.
      * @returns Promise de la lista de posts.
      */
-    async getPosts(pull: boolean = false): Promise<Post[]> {
+    async getFeedPosts(pull: boolean = false, page: number = 0): Promise<Post[]> {
         try {
-            const response: any = await firstValueFrom(this.http.get<any>(`${environment.apiUrl}/posts/feed`));
+            const response: any = await firstValueFrom(this.http.get<any>(`${environment.apiUrl}/posts/feed`, {
+                params: {
+                    page: page.toString(),
+                }
+            }));
             return response.posts.map(transformarPost); // Transformar cada post recibido
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+            throw error; // Lanza el error para manejarlo en el componente
+        }
+    }
+
+        /**
+     * Añade un comentario a un post.
+     * @param postId - ID del post al que se va a añadir el comentario.
+     * @param content - Contenido del comentario.
+     * @returns Observable de la respuesta del servidor.
+     */
+    async addComment(postId: number, content: string): Promise<AppComment> {
+        try {
+            const response: any = await firstValueFrom(this.http.post(`${environment.apiUrl}/posts/${postId}/comments`, { content }));
+            return transformarAppComment(response.comment);
         } catch (error) {
             console.error('Error fetching posts:', error);
             throw error; // Lanza el error para manejarlo en el componente

@@ -5,8 +5,14 @@
 </ion-header>
 
 <ion-content class="scrollable-content">
+  <!-- Mostrar mensaje si no hay comentarios -->
+  <div *ngIf="!post?.comments || post.comments.length === 0" class="no-comments centered-text">
+    <p>Sin comentarios</p>
+    <p class="first-comment">Sé el primero en comentar</p>
+  </div>
+
+  <!-- Mostrar lista de comentarios si hay al menos uno -->
   <app-comment *ngFor="let comment of post?.comments" [comment]="comment"></app-comment>
-  <!-- Caja de texto para escribir un nuevo comentario -->
 </ion-content>
 
 <ion-footer class="fixed-footer">

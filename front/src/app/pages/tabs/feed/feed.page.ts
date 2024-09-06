@@ -12,6 +12,7 @@ import { TimeParser } from 'src/app/utils/TimeParser';
 })
 export class FeedPage {
 
+  page: number = 0;
   posts: Post[] = [];
   habilitado = true;
 
@@ -22,10 +23,13 @@ export class FeedPage {
   ) { }
 
   ionViewWillEnter() {
+    this.page = 0;
+    this.posts = [];
     this.siguientes();
   }
 
   doRefresh(event: any) {
+    this.page = 0;
     this.posts = [];
     this.siguientes(event, true);
     this.habilitado = true;
@@ -35,7 +39,7 @@ export class FeedPage {
   async siguientes(event?: any, pull: boolean = false) {
     try {
       // Llama a la nueva versión de getPosts que devuelve una Promise
-      const resp = await this.postsService.getPosts(pull);
+      const resp = await this.postsService.getFeedPosts(pull, this.page);
 
       resp.forEach( async post => {
 
@@ -59,6 +63,7 @@ export class FeedPage {
 
       // Agrega los posts recibidos a la lista existente
       this.posts.push(...resp);
+      this.page++;
       
       // Si hay un evento (scroll o refresco), gestiona la finalización del mismo
       if (event) {

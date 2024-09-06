@@ -93,19 +93,18 @@
         ></ion-input>
       </ion-item>
 
+      <!-- Nivel de privacidad -->
       <ion-item class="custom-item">
         <ion-label position="stacked">Privacy Level</ion-label>
-        <ion-segment value="Public">
-          <ion-segment-button value="all">
+        <ion-segment [(ngModel)]="temporalUser.privacyLevel" name="privacyLevel">
+          <ion-segment-button value="PUBLIC">
             <ion-label>Public</ion-label>
           </ion-segment-button>
-          <ion-segment-button value="Private">
+          <ion-segment-button value="PRIVATE">
             <ion-label>Private</ion-label>
           </ion-segment-button>
         </ion-segment>
       </ion-item>
-      
-
     </ion-list>
 
     <!-- Botón de actualización -->
@@ -117,6 +116,6 @@
       </ion-col>
     </ion-row>
 
-  </form>
+  </form> <!-- Aquí cierra la etiqueta form -->
 
 </ion-content>

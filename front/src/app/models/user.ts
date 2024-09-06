@@ -5,6 +5,7 @@ import { Role, transformarRole } from "./role";
 export class User {
     id: number;
     username: string;
+
     password?: string;
     email?: string;
     phone?: string;
@@ -24,8 +25,12 @@ export class User {
     privacyData?: PrivacyLevel;
   
     constructor(data: Partial<User>) {
+
+      //Mandatory
       this.id = data.id!;
-      this.username = data.username || '';
+      this.username = data.username!;
+      
+      //Optional
       this.password = data.password;
       this.email = data.email || '';
       this.phone = data.phone || '';
@@ -33,7 +38,6 @@ export class User {
       this.lastName = data.lastName || '';
       this.description = data.description || '';
       this.roles = data.roles || [];
-      this.token = data.token || '';
       this.friends = data.friends || [];
       this.enabled = data.enabled !== undefined ? data.enabled : true;
       this.admin = data.admin !== undefined ? data.admin : false;

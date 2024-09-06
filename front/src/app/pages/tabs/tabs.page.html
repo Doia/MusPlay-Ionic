@@ -1,14 +1,14 @@
 <ion-tabs>
   <ion-tab-bar slot="bottom">
-    <ion-tab-button (click)="navigateToHome()">
+    <ion-tab-button (click)="navigateToHome()" [class.selected]="lastSelected === 0">
       <ion-icon name="home"></ion-icon>
     </ion-tab-button>
 
-    <ion-tab-button (click)="navigateToFeed()">
+    <ion-tab-button (click)="navigateToFeed()" [class.selected]="lastSelected === 1">
       <ion-icon name="list"></ion-icon>
     </ion-tab-button>
 
-    <ion-tab-button (click)="navigateToProfile()">
+    <ion-tab-button (click)="navigateToProfile()" [class.selected]="lastSelected === 2">
       <ion-icon name="person"></ion-icon>
     </ion-tab-button>
   </ion-tab-bar>

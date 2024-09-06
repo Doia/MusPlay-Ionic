@@ -10,7 +10,7 @@ export interface Post {
     imagePath?: string;
     imageUrl?: string;
     likes: User[];
-    comments?: AppComment[];
+    comments: AppComment[];
 }
 
 export function transformarPost(data: any): Post {

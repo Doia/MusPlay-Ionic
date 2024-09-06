@@ -127,8 +127,22 @@ export class AccountService {
             }));
     }
 
-    updateUser(user: User){
-        return true;
+    async updateUser(user: User): Promise<boolean> {
+        try {
+            const response = await firstValueFrom(this.http.put<{ msg: String, user: User  }>(`${environment.apiUrl}/users/${user.id}`, user));
+    
+            const updatedUser : User = new User(response.user);
+            // Actualizar el usuario almacenado en localStorage si es el mismo que el usuario actualizado
+            if (updatedUser && user.id === this.userValue?.id) {
+                localStorage.setItem('user', JSON.stringify(updatedUser));
+                this.userSubject.next(updatedUser);
+            }
+    
+            return true;
+        } catch (error) {
+            console.error('Error updating user:', error);
+            return false;
+        }
     }
 
     public getUsernameFromToken(): string | null {

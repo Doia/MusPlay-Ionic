@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ActionSheetController } from '@ionic/angular';
 import { Post, transformarPost } from 'src/app/models/post';
 import { AccountService } from 'src/app/services/account.service';
 import { PostsService } from 'src/app/services/posts.service';
@@ -12,23 +13,29 @@ import { TimeParser } from 'src/app/utils/TimeParser';
 export class PostComponent implements OnInit {
 
   @Input() post: Post = transformarPost({});
-  @Output() openCommentsModal = new EventEmitter<Post>();
+  @Output() openCommentsModal = new EventEmitter<{ post: Post, openFull: boolean }>();
 
-  slideSoloOpts = {
-    allowSlideNext: false,
-    allowSlidePrev: false
-  };
+  visibleComments: any[] = [];
+  maxCommentsPerPost: number = 3; // Número de comentarios que se muestran inicialmente
+  hasMoreComments: boolean = false;
 
   constructor(
     private accountService: AccountService,
-     private timeParser: TimeParser,
-     private postsService: PostsService
-    ) { }
+    private timeParser: TimeParser,
+    private postsService: PostsService,
+    private actionSheetController: ActionSheetController // Agregar ActionSheetController
+  ) { }
 
   ngOnInit() {
-    // Asegúrate de que el post cumple con la interfaz Post antes de utilizarlo
     if (this.post) {
-      this.post = transformarPost(this.post);
+      this.updateVisibleComments();
+    }
+  }
+
+  private updateVisibleComments() {
+    if (this.post?.comments) {
+      this.visibleComments = this.post.comments.slice(0, this.maxCommentsPerPost);
+      this.hasMoreComments = this.post.comments.length > this.maxCommentsPerPost;
     }
   }
 
@@ -36,7 +43,6 @@ export class PostComponent implements OnInit {
     return this.timeParser.parseTime(createdAt);
   }
 
-  // Método para manejar el evento de like
   toggleLike(postId: number, liked: boolean) {
     if (liked) {
       this.postsService.removeLike(postId).subscribe({
@@ -57,20 +63,43 @@ export class PostComponent implements OnInit {
     }
   }
 
-
-  liked(){
-
-    if (this.accountService.userValue == null){
+  liked() {
+    if (this.accountService.userValue == null) {
       console.log('Error');
-    }
-    else{
+    } else {
       return this.post.likes.some(user => user.id === this.accountService.userValue!.id);
     }
     return false;
   }
 
-  openComments(post: Post) {
-    this.openCommentsModal.emit(post);
+  openComments(post: Post, openFull: boolean) {
+    this.openCommentsModal.emit({post, openFull});
   }
 
+  async presentActionSheet() {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Opciones',
+      buttons: [
+        {
+          text: 'Compartir',
+          icon: 'share-social-outline',
+          handler: () => {
+            console.log('Compartir clicked');
+            // Lógica para compartir el post
+          }
+        },
+        {
+          text: 'Eliminar',
+          icon: 'trash-outline',
+          role: 'destructive',
+          handler: () => {
+            console.log('Eliminar clicked');
+            // Lógica para eliminar el post
+          }
+        }
+      ]
+    });
+    await actionSheet.present();
+  }
+  
 }

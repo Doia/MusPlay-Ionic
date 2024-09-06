@@ -14,10 +14,20 @@
         <img [src]="getProfileImage(notification.sender.id)" />
       </ion-avatar>
       <ion-label>
-        <h2>{{ notification.sender.username }}</h2>
-        <p>{{ notification.message }}</p>
+        <!-- <h2>{{ notification.sender.username }}</h2> -->
+        <p>{{ getNotificationMessage(notification) }}</p>
         <p>{{ parseTime(notification.createdAt) }}</p>
       </ion-label>
+      
+      <!-- Botones de Aceptar/Rechazar para solicitud de seguimiento -->
+      <ion-buttons slot="end" *ngIf="notification.type === 'FOLLOW_REQUEST' && notification.followRequest?.status === 'PENDING'">
+        <ion-button class="small-button" fill="solid" color="primary" (click)="acceptFollowRequest(notification)">
+          <ion-icon slot="icon-only" name="checkmark-outline"></ion-icon>
+        </ion-button>
+        <ion-button class="small-button" fill="solid" color="danger" (click)="rejectFollowRequest(notification)">
+          <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
     </ion-item>
   </ion-list>
 </ion-content>

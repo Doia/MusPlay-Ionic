@@ -23,13 +23,21 @@ export class PostsComponent implements OnInit {
     console.log(this.posts);
   }
 
-  async openComments(post: Post) {
+  async openComments(event: { post: Post, openFull: boolean }) {
+    const post = event.post;
+    const openFull = event.openFull;
+
     console.log('Opening comments modal with post:', post);
+
+    var initialBreakpoint = 0.75;
+    if (openFull){
+      initialBreakpoint = 1;
+    }
   
     const modal = await this.modalController.create({
       component: CommentsModalComponent,
       componentProps: { post: post },
-      initialBreakpoint: 0.75,
+      initialBreakpoint: initialBreakpoint,
       breakpoints: [0, 0.75, 1],
       backdropDismiss: true,
     });

@@ -55,3 +55,10 @@
       font-size: 2rem;
     }
   }
+
+  .avatar-bordered {
+    border: 0px solid black; /* Define el grosor y el color del borde */
+    border-radius: 50%; /* Hace que el borde sea redondo */
+    padding: 0px; /* Añade un pequeño espacio entre la imagen y el borde */
+    display: inline-block; /* Asegura que el borde siga la forma del contenido */
+}

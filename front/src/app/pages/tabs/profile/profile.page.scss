@@ -17,3 +17,12 @@ ion-header.no-border {
 .top-20 {
     margin-top: 20px;
 }
+
+.private-card {
+  --background: rgba(131, 125, 125, 0.247); /* Fondo blanco con opacidad para transparencia */
+  --box-shadow: none; /* Elimina la sombra */
+  --border-radius: 0; /* Elimina los bordes redondeados */
+  text-align: center;
+  padding: 20px;
+  margin-top: 20px;
+}

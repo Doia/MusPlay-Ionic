@@ -3,7 +3,6 @@ import { NavController } from '@ionic/angular';
 import { NotificationService } from 'src/app/services/notificationService';
 import { TimeParser } from '../../../utils/TimeParser';
 import { NotificationModel } from 'src/app/models/notificationModel';
-import { User } from 'src/app/models/user';
 import { ImageService } from 'src/app/services/image.service';
 
 @Component({
@@ -23,8 +22,8 @@ export class NotificationsPage {
     private timeParser: TimeParser
   ) {}
 
-  ionViewWillEnter() {
-    this.loadNotifications();
+  async ionViewWillEnter() {
+    await this.loadNotifications();
   }
 
   async loadNotifications() {
@@ -38,10 +37,10 @@ export class NotificationsPage {
       if (user && user.imagePath) {
         const imageUrl = await this.imageService.getProfileImageUrl(user.imagePath);
         console.log(imageUrl);
-        if (user.id){
+        if (user.id) {
           this.profileImages[user.id] = imageUrl;
         }
-          // Guardar la URL en el diccionario
+        // Guardar la URL en el diccionario
       }
     });
     await Promise.all(imageRequests);  // Esperar a que todas las imágenes se carguen
@@ -58,5 +57,49 @@ export class NotificationsPage {
   // Método para obtener la URL de la imagen de perfil en el template
   getProfileImage(userId: number): string {
     return this.profileImages[userId] || 'assets/avatars/default-avatar.png'; // Usar un avatar por defecto si no hay imagen
+  }
+
+  async acceptFollowRequest(notification: NotificationModel): Promise<void> {
+    const success = await this.notificationService.acceptFollowRequest(notification.followRequest!.id);
+    if (success) {
+      // Actualizar la lista de notificaciones para reflejar la aceptación
+      notification.followRequest!.status = 'ACCEPTED';
+    } else {
+      console.error('Failed to accept follow request');
+    }
+  }
+
+  async rejectFollowRequest(notification: NotificationModel): Promise<void> {
+    const success = await this.notificationService.rejectFollowRequest(notification.followRequest!.id);
+    if (success) {
+      // Actualizar la lista de notificaciones para reflejar el rechazo
+      notification.followRequest!.status = 'REJECTED';
+    } else {
+      console.error('Failed to reject follow request');
+    }
+  }
+
+  getNotificationMessage(notification: NotificationModel): string {
+    switch (notification.type) {
+      case 'LIKE':
+        return `@${notification.sender.username} le ha gustado tu publicación.`;
+      case 'FOLLOW':
+        return `@${notification.sender.username} ha comenzado ha seguirte.`;
+      case 'COMMENT':
+        return `@${notification.sender.username} ha comentado en tu publicación.`;
+      case 'FOLLOW_REQUEST':
+        switch (notification.followRequest?.status) {
+          case 'ACCEPTED':
+            return `@${notification.sender.username} ha comenzado ha seguirte.`;
+          case 'REJECTED':
+            return `@${notification.sender.username} quiso seguirte.`;
+          case 'PENDING':
+            return `@${notification.sender.username} quiere seguirte.`;
+          default:
+            return 'You have a new notification.';
+        }  
+      default:
+        return 'You have a new notification.';
+    }
   }
 }

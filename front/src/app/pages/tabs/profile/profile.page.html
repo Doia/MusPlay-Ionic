@@ -1,9 +1,9 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title >{{ user.username }}</ion-title>
+    <ion-title>{{ user.username }}</ion-title>
 
     <ion-buttons slot="end">
-      <ion-button (click)="logout()" color="danger">
+      <ion-button *ngIf="isOwnProfile" (click)="logout()" color="danger">
         <ion-icon slot="icon-only" name="exit"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -15,7 +15,7 @@
 
     <ion-row class="ion-align-items-center ion-padding">
       <ion-col size="4">
-        <ion-avatar style="width: 100%; height: 100%; object-fit: cover;">
+        <ion-avatar style="width: 100%; height: 100%; object-fit: cover;" class="avatar-bordered">
           <img [src]="getProfileImageUrl()" alt="profile" />
         </ion-avatar>
       </ion-col>
@@ -45,22 +45,36 @@
     </ion-row>
 
     <!-- Espacio para texto y label -->
-    <ion-label position="stacked" style="display: flex; flex-direction: column; align-items: left; font-size: 14px;" >
+    <ion-label position="stacked" style="display: flex; flex-direction: column; align-items: left; font-size: 14px;">
       <strong>{{ user.name }}  {{ user.lastName }}</strong>
     </ion-label>
-    <ion-label position="stacked" style="display: flex; flex-direction: column; align-items: left; font-size: 12px;" >{{ user.description }}</ion-label>
+    <ion-label position="stacked" style="display: flex; flex-direction: column; align-items: left; font-size: 12px;">
+      {{ user.description }}
+    </ion-label>
 
-
+    <!-- Botones condicionales -->
     <ion-row class="ion-align-items-center ion-padding">
+      <ion-col *ngIf="isOwnProfile">
+        <ion-button expand="block" style="font-size: 14px;" (click)="goToEditProfile()">
+          Edit Profile
+        </ion-button>
+      </ion-col>
+      <ion-col *ngIf="!isOwnProfile">
+        <ion-button expand="block" style="font-size: 14px;" (click)="followUser()">
+          Follow
+        </ion-button>
+      </ion-col>
       <ion-col>
-        <ion-button expand="block" style="font-size: 14px;" (click)="goToEditProfile()">Edit Profile</ion-button>
+        <ion-button expand="block" style="font-size: 14px;" (click)="shareProfile()">
+          Share
+        </ion-button>
       </ion-col>
     </ion-row>
 
-
+    <!-- Segmento para vista de posts o lista -->
     <ion-row>
       <ion-col>
-        <ion-segment value="grid">
+        <ion-segment [(ngModel)]="segmentValue">
           <ion-segment-button value="grid">
             <ion-icon name="grid-outline"></ion-icon>
           </ion-segment-button>
@@ -71,10 +85,56 @@
       </ion-col>
     </ion-row>
 
-    <ion-row>
-      <ion-col size="4" *ngFor="let img of images">
-        <img [src]="img" alt="post image" />
+    <!-- Contenido basado en el valor del segmento -->
+    <ion-row *ngIf="segmentValue === 'grid'">
+      <ion-col size="12">
+        <ng-container *ngIf="isProfilePrivate">
+          <!-- Mensaje de perfil privado -->
+          <ion-card class="private-card">
+            <ion-card-content>
+              <strong>This profile is private</strong>
+              <p>You need to follow this user to see their posts.</p>
+            </ion-card-content>
+          </ion-card>
+        </ng-container>
+
+        <ng-container *ngIf="!isProfilePrivate">
+          <!-- Posts -->
+          <app-posts [posts]="posts"></app-posts>
+
+          <!-- Infinite Scroll -->
+          <ion-infinite-scroll [disabled]="!habilitado"
+                                threshold="150px"
+                                (ionInfinite)="siguientes($event)">
+            <ion-infinite-scroll-content></ion-infinite-scroll-content>
+          </ion-infinite-scroll>
+        </ng-container>
       </ion-col>
     </ion-row>
+
+    <ion-row *ngIf="segmentValue === 'list'">
+      <ion-col size="12">
+        <ng-container *ngIf="isProfilePrivate">
+          <!-- Mensaje de perfil privado -->
+          <ion-card class="private-card">
+            <ion-card-content>
+              <strong>This profile is private</strong>
+              <p>You need to follow this user to see their posts.</p>
+            </ion-card-content>
+          </ion-card>
+        </ng-container>
+
+        <ng-container *ngIf="!isProfilePrivate">
+            <!-- Mensaje de perfil privado -->
+            <ion-card class="private-card">
+              <ion-card-content>
+                <strong>Aqui iran estadisticas</strong>
+                <p>Eres tan bueno eres tan malo...</p>
+              </ion-card-content>
+            </ion-card>        
+        </ng-container>
+      </ion-col>
+    </ion-row>
+
   </ion-grid>
 </ion-content>

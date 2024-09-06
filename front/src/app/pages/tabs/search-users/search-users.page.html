@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start" (click)="goBack()">
-      <ion-back-button default-href="#"></ion-back-button>
+      <ion-back-button default-href=""></ion-back-button>
     </ion-buttons>
     <ion-title>Search</ion-title>
   </ion-toolbar>
@@ -16,7 +16,7 @@
 
   <ion-list>
     <ion-item *ngFor="let user of filteredUsers" (click)="goToUserProfile(user.username)">
-      <ion-avatar slot="start">
+      <ion-avatar slot="start" class="avatar-bordered">
         <img [src]="user.imageUrl" />
       </ion-avatar>
       <ion-label>

@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ProfilePage } from './profile.page';
 import { ProfilePageRoutingModule } from './profile-routing.module';
 import { ComponentsModule } from 'src/app/components/components.module';
+import { TimeParser } from 'src/app/utils/TimeParser';
 
 @NgModule({
   imports: [
@@ -14,6 +15,9 @@ import { ComponentsModule } from 'src/app/components/components.module';
     ComponentsModule,
     ProfilePageRoutingModule
   ],
-  declarations: [ProfilePage]
+  declarations: [ProfilePage],
+  providers: [
+    TimeParser  // Aquí registramos TimeParser como proveedor
+  ]
 })
 export class ProfilePageModule {}

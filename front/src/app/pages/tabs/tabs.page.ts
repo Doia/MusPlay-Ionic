@@ -9,15 +9,18 @@ import { AccountService } from 'src/app/services/account.service';
 })
 export class TabsPage {
 
+  lastSelected: number = 0;
   username!: string;
 
   constructor(private accountService: AccountService, private navCtrl: NavController) {}
 
-  ngOnInit() {
-    // this.username = this.accountService.getUsernameFromToken(); // Obtén el ID del usuario desde el token
+
+  ionViewWillEnter() {
+    this.lastSelected = 0;
     const username = this.accountService.userValue?.username;
     if (username == undefined){
       console.error('User USERNAME is undefined, cannot navigate to profile');
+      this.accountService.logout();
     }
     else{
       this.username = username;
@@ -27,14 +30,17 @@ export class TabsPage {
 
   // Métodos de navegación
   navigateToHome() {
+    this.lastSelected = 0;
     this.navCtrl.navigateForward('/tabs/home');
   }
 
   navigateToFeed() {
+    this.lastSelected = 1;
     this.navCtrl.navigateForward('/tabs/feed');
   }
 
   navigateToProfile() {
+    this.lastSelected = 2;
     const username = this.accountService.userValue?.username;
     if (username == undefined){
       console.error('User USERNAME is undefined, cannot navigate to profile');

@@ -1,15 +1,16 @@
-<ion-card>
+<ion-card class="post">
   <!-- Usuario y opciones -->
   <ion-item lines="none">
-    <ion-avatar slot="start">
+    <ion-avatar slot="start" class="avatar-bordered">
       <img [src]="post.owner.imageUrl" />
     </ion-avatar>
+
     <ion-label>
       <h2>{{ post.owner.username }}</h2>
       <p>{{ parseTime(post.createdDate) }}</p>
     </ion-label>
-    <ion-button fill="clear" slot="end" id="options-button">
-      <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+    <ion-button fill="clear" slot="end" id="options-button" (click)="presentActionSheet()">
+      <ion-icon slot="icon-only" name="ellipsis-vertical" [style.color]="'black'"></ion-icon>
     </ion-button>
   </ion-item>
 
@@ -17,27 +18,18 @@
   <ion-card-content>
     <p>{{ post.content }}</p>
     <!-- Mostrar imagen solo si post.imagePath tiene un valor válido -->
-    <ion-img *ngIf="post.imageUrl" [src]="post.imageUrl"></ion-img>
+    <ion-img *ngIf="post.imageUrl" [src]="post.imageUrl" class="image-slide"></ion-img>
   </ion-card-content>
 
   <!-- Botones de interacción -->
   <ion-item lines="none">
     <ion-button fill="clear" slot="start" id="like-button" (click)="toggleLike(post.id, liked())">
-      <!-- Cambiar el nombre del icono dinámicamente basado en la función liked() -->
       <ion-icon [name]="liked() ? 'heart' : 'heart-outline'" [style.color]="liked() ? 'red' : 'black'"></ion-icon>
-      <!-- Badge con fondo blanco -->
       <ion-badge color="primary" [style.background-color]="'white'" [style.color]="'black'">{{ post.likes.length }}</ion-badge>
     </ion-button>
-    <ion-button fill="clear" slot="start" id="comment-button">
-      <ion-icon slot="icon-only" name="chatbubble-outline"></ion-icon>
+    <ion-button fill="clear" slot="start" id="comment-button" (click)="openComments(post, true)">
+      <ion-icon slot="icon-only" name="chatbubble-outline" [style.color]="'black'"></ion-icon>
+      <ion-badge color="primary" [style.background-color]="'white'" [style.color]="'black'">{{ post.comments.length }}</ion-badge>
     </ion-button>
   </ion-item>
-
-  <!-- Comentarios -->
-  <ion-card-content>
-    <app-comment *ngFor="let comment of post?.comments" [comment]="comment"></app-comment>
-    <ion-button expand="full" fill="outline" (click)="openComments(post)">
-      Ver más comentarios
-    </ion-button>
-  </ion-card-content>
 </ion-card>

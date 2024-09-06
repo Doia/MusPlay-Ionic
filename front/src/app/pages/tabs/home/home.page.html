@@ -1,17 +1,54 @@
-<ion-header [translucent]="true">
+<ion-header no-border>
   <ion-toolbar>
+
+    <ion-buttons slot="start">
+      <ion-icon slot="icon-only" name="bonfire"></ion-icon>
+    </ion-buttons>
+
     <ion-title>
-      Home
+      Mas Mus
     </ion-title>
+
+    <!-- Botones de búsqueda y notificaciones -->
+    <ion-buttons slot="end">
+      <!-- Botón de búsqueda -->
+      <ion-button (click)="goToSearchPage()">
+        <ion-icon slot="icon-only" name="search-outline"></ion-icon>
+      </ion-button>
+
+      <!-- Botón de notificaciones -->
+      <ion-button (click)="goToNotifications()">
+        <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Home</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-grid class="ion-text-center">
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" color="success" (click)="partida()">
+          Partida
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" color="success" (click)="torneo()">
+          Torneo
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-label>Próximas partidas</ion-label>
+        <ion-item lines="none">
+          <ion-label>Partida: Sábado 10 de Junio</ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
-  <app-explore-container name="Home"></app-explore-container>
 </ion-content>

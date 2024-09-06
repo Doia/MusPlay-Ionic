@@ -26,4 +26,15 @@ ion-header.no-border {
     font-size: 14px;
     color: var(--ion-text-color-step-600);
   }
+
+  .small-button {
+    --padding-start: 4px;
+    --padding-end: 4px;
+    --padding-top: 2px;
+    --padding-bottom: 2px;
+    --border-radius: 4px;
+    --min-width: 16px;  /* Ajusta el ancho mínimo */
+    --height: 16px;     /* Ajusta la altura */
+    font-size: 12px;    /* Ajusta el tamaño de la fuente */
+  }
   

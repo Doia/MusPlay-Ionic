@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:8080',
+  apiUrl: 'https://ec2-18-202-174-189.eu-west-1.compute.amazonaws.com:8443',
   profileImages: '/profile-images',
   postImages: '/post'
 };

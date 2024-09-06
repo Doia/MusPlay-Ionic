@@ -14,6 +14,6 @@ export function transformarAppComment(data: any): AppComment {
         id: data.id,
         owner: data.owner || {},
         content: data.content || '', // Valor por defecto si no hay contenido
-        createdAt: data.date || new Date().toISOString(), // Valor por defecto si no hay fecha
+        createdAt: data.createdAt || new Date().toISOString(), // Valor por defecto si no hay fecha
     };
 }

@@ -14,6 +14,7 @@ export interface NotificationModel {
     followRequest?: {
         id: number;
         sender: User;
+        status: string,
     };
     isRead: boolean;
 }
@@ -46,7 +47,8 @@ export function transformarNotificationModel(data: any): NotificationModel {
         createdAt: data.createdAt ? new Date(data.createdAt) : new Date(), // Valor por defecto si no hay fecha
         followRequest: data.followRequest ? {
             id: data.followRequest.id,
-            sender: new User(data.followRequest.sender)
+            sender: new User(data.followRequest.sender),
+            status: data.followRequest.status
         } : undefined,
         isRead: data.isRead !== undefined ? data.isRead : false, // Valor por defecto
     };

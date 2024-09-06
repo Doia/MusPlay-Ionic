@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { NavController } from '@ionic/angular';
+import { PrivacyLevel } from 'src/app/models/PrivacyLevel';
 import { User } from 'src/app/models/user';
 import { AccountService } from 'src/app/services/account.service';
 import { ImageService } from 'src/app/services/image.service';
@@ -29,25 +30,41 @@ export class EditProfilePage {
   ) { }
 
   ionViewWillEnter() {
+    // Lógica para cargar el perfil del usuario
     const username = this.accountService.userValue?.username ?? '';
     this.profileImageUrl = null;
-    this.loadUserProfile(username);
+    if (username) {
+      this.loadUserProfile(username);
+    }
   }
 
   private async loadUserProfile(username: string) {
     this.user = await this.profileService.getUserProfile(username) ?? {};
-    this.temporalUser = JSON.parse(JSON.stringify(this.user)) ?? {};
+    this.temporalUser = JSON.parse(JSON.stringify(this.user));
 
-    // Solo llama a la función para obtener la imagen si no está en caché
-    if (!this.profileImageUrl) {
-      this.profileImageUrl = await this.imageService.getProfileImageUrl(this.user.imagePath);
+    this.profileImageUrl = await this.imageService.getProfileImageUrl(this.user.imagePath);
+    
+
+    // Establece un valor de privacidad predeterminado si no existe
+    if (!this.temporalUser.privacyLevel) {
+      this.temporalUser.privacyLevel = PrivacyLevel.PUBLIC;
     }
   }
 
   async actualizar(fActualizar: NgForm) {
     if (fActualizar.invalid) { return; }
 
-    const actualizado = await this.accountService.updateUser(this.temporalUser);
+      // Crea un objeto con solo los campos que deseas actualizar
+    const updatedUserData = {
+      id: this.temporalUser.id,
+      username: this.temporalUser.username,
+      description: this.temporalUser.description,
+      name: this.temporalUser.name,
+      phone: this.temporalUser.phone,
+      privacyLevel: this.temporalUser.privacyLevel
+    };
+
+    const actualizado = await this.accountService.updateUser(updatedUserData);
     if (actualizado) {
       this.profileService.setUserProfile(this.temporalUser);
       this.uiService.presentToast('Registro actualizado');

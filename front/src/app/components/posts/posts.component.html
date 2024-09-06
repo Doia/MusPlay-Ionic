@@ -1,18 +1,15 @@
-
-
-<ion-grid fixed>
+<ion-grid >
     <ion-row>
-        <ion-col size="12" size-lg="3" size-md="4" size-sm="6" size-xs="12"
-                 *ngFor="let post of posts">
-            <app-post [post]="post" (openCommentsModal)="openComments($event)"></app-post>
-        </ion-col>
+      <!-- Hacer que cada columna ocupe todo el ancho (12 columnas) en todos los tamaños de pantalla -->
+      <ion-col size="12" *ngFor="let post of posts">
+        <app-post [post]="post" (openCommentsModal)="openComments($event)"></app-post>
+      </ion-col>
     </ion-row>
 </ion-grid>
-
-<!-- Modal de comentarios
-<app-comments-modal
-    [post]="selectedPost"
-    (closeModal)="closeCommentsModal()">
-</app-comments-modal> -->
-
-
+  
+  <!-- Modal de comentarios
+  <app-comments-modal
+      [post]="selectedPost"
+      (closeModal)="closeCommentsModal()">
+  </app-comments-modal> -->
+  
