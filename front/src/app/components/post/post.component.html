@@ -17,9 +17,23 @@
   <!-- Texto del Post -->
   <ion-card-content>
     <p>{{ post.content }}</p>
-    <!-- Mostrar imagen solo si post.imagePath tiene un valor válido -->
+    <!-- Mostrar imagen solo si post.imageUrl tiene un valor válido -->
     <ion-img *ngIf="post.imageUrl" [src]="post.imageUrl" class="image-slide"></ion-img>
   </ion-card-content>
+
+  <!-- Sección de Comentarios usando CommentComponent -->
+  <ion-card-content *ngIf="post.comments && post.comments.length > 0">
+    <!-- Usar el componente de comentarios para cada comentario visible -->
+    <app-comment *ngFor="let comment of visibleComments" [comment]="comment"></app-comment>
+  </ion-card-content>
+
+  <ion-card-content>
+    <!-- Botón para ver más comentarios -->
+    <span *ngIf="hasMoreComments"  class="view-more-comments" (click)="openComments(post, false)">
+      Ver más comentarios
+    </span>
+  </ion-card-content>
+
 
   <!-- Botones de interacción -->
   <ion-item lines="none">
@@ -32,4 +46,5 @@
       <ion-badge color="primary" [style.background-color]="'white'" [style.color]="'black'">{{ post.comments.length }}</ion-badge>
     </ion-button>
   </ion-item>
+  
 </ion-card>

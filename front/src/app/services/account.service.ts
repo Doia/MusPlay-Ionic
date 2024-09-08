@@ -26,15 +26,16 @@ export class AccountService {
         return this.userSubject.value;
     }
 
-    async login(username: string, password: string): Promise<boolean> {
+    async login(identifier: string, password: string): Promise<boolean> {
         try {
-            const data: any = await lastValueFrom(this.http.post(`${environment.apiUrl}/login`, { username, password }));
+            const data: any = await lastValueFrom(this.http.post(`${environment.apiUrl}/auth/login`, { identifier, password }));
 
             // Guarda el token
             localStorage.setItem('token', data.token);
+            localStorage.setItem('refreshToken', data.refreshToken);
 
             // Obtener todos los datos del usuario con el token recibido
-            const userLogged: User | undefined = await this.getUserByUsername(username);
+            const userLogged: User | undefined = await this.getUserByUsername(data.username);
 
             if (userLogged) {
 
@@ -58,6 +59,7 @@ export class AccountService {
     logout(): void {
         localStorage.removeItem('user');
         localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
         this.userSubject.next(null);
         this.isLoggedIn = false;
         this.router.navigate(['/login']);
@@ -65,11 +67,21 @@ export class AccountService {
 
     async register(user: User): Promise<boolean> {
         try {
-            await lastValueFrom(this.http.post(`${environment.apiUrl}/users/register`, user));
+            const response = await lastValueFrom(this.http.post(`${environment.apiUrl}/auth/register`, user));
             return true;
         } catch (error) {
             console.error('Error occurred during registration:', error);
             return false;
+        }
+    }
+
+    async refreshToken(refreshToken: string): Promise<{}> {
+        try {
+            const response = await lastValueFrom(this.http.post(`${environment.apiUrl}/auth/refresh`, {refreshToken}));
+            return response;
+        } catch (error) {
+            console.error('Error occurred:', error);
+            return {};
         }
     }
 

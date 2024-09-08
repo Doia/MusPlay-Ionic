@@ -7,23 +7,25 @@ import { AccountService } from '../services/account.service';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-    constructor(private accountService: AccountService) { }
+  constructor(private accountService: AccountService) {}
 
-    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        // add auth header with jwt if user is logged in and request is to the api url
-        const token = localStorage.getItem('token');
-        if (!token) {
-            return next.handle(request);
-        }
-        const isApiUrl = request.url.startsWith(environment.apiUrl);
-        if (token && isApiUrl) {
-            request = request.clone({
-                setHeaders: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-        }
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    // Obtener el token del almacenamiento local
+    const token = localStorage.getItem('token');
+    const isApiUrl = request.url.startsWith(environment.apiUrl);
 
-        return next.handle(request);
+    // Verificar si la URL es a la API y no es a la ruta de autenticación
+    const isAuthUrl = request.url.startsWith(`${environment.apiUrl}/auth`);
+
+    if (isApiUrl && !isAuthUrl && token) {
+      // Clonar la solicitud y añadir el encabezado de autorización si no es una llamada a /auth
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
+      });
     }
+
+    return next.handle(request);
+  }
 }
